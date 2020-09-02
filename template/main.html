@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Bear Classification</title>
+  <style type="text/css">
+  form {
+    margin:auto;
+    width:35%;
+  }
+  .result{
+    margin:auto;
+    width:35%;
+    border:1px solid green;
+  }
+  .display{
+    /*position: absolute;*/
+    margin:auto;
+    width:35%;
+    /*border:1px solid #ccc;*/
+    list-style-type: none;
+  }
+  
+  .img-display{
+    /*position: absolute;*/
+    margin:auto;
+    width:48%;
+    border:1px solid green;
+    list-style-type: none;
+  }
+  
+  #over img {
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+}
+
+.container { 
+  height: 100px;
+  position: relative;
+  border: 1px solid green; 
+}
+
+.container-inner { 
+  height: 120px;
+  position: relative;
+  border: 1px solid green; 
+}
+
+.vertical-center {
+  margin: 0;
+  position: relative;
+  top: 50%;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+.btn-class{
+  padding-left: 24%;
+}
+
+.btn-upload{
+  padding-left: 24%
+}
+
+</style>
+
+
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+
+
+<body>
+  <div class="container">
+  <h2 class='display'>Classify Which Bear?</h2>
+<p>
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <ul class=flashes>
+    {% for message in messages %}
+      <li class='display'>{{ message }}</li>
+    {% endfor %}
+    </ul>
+    {% endif %}
+  {% endwith %}
+</p>
+{% if filename %}
+<br>
+  <div class='img-display' id='over'>
+    <img src="{{ url_for('display_image', filename=filename) }}" width="512" height="256">
+  </div>
+{% endif %}
+
+<br>
+<br>
+
+<div class="result" align="center">
+  {% if result %}
+    <br> Predicted class of the bear :
+        <p><b>{{ result }}</b></p> 
+  {% endif%}
+</div>
+
+
+<form method="post" action="/" enctype="multipart/form-data">
+    
+    <p>
+   
+
+<div class='container-inner'>
+  <div class = 'vertical-center'>
+    <input type="file" name="file" autocomplete="off" class='btn-class' required>
+    </p>
+
+    <p class='btn-class'>
+    <input type="submit" value="Classify" class="btn btn-warning">
+  </p>
+</div>
+</div>
+  
+</form>
+<br>
+
+</div>
+</body>
+</html>
