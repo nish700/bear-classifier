@@ -1,87 +1,125 @@
 <!DOCTYPE html>
-<html >
-<!--From https://codepen.io/frytyler/pen/EGdtg-->
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>ML API</title>
-  <link href='https://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
-<link href='https://fonts.googleapis.com/css?family=Arimo' rel='stylesheet' type='text/css'>
-<link href='https://fonts.googleapis.com/css?family=Hind:300' rel='stylesheet' type='text/css'>
-<link href='https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300' rel='stylesheet' type='text/css'>
+  <title>Bear Classification</title>
+  <style type="text/css">
+  form {
+    margin:auto;
+    width:35%;
+  }
+  .result{
+    margin:auto;
+    width:35%;
+    border:1px solid green;
+  }
+  .display{
+    /*position: absolute;*/
+    margin:auto;
+    width:35%;
+    /*border:1px solid #ccc;*/
+    list-style-type: none;
+  }
   
+  .img-display{
+    /*position: absolute;*/
+    margin:auto;
+    width:48%;
+    border:1px solid green;
+    list-style-type: none;
+  }
+  
+  #over img {
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+}
+
+.container { 
+  height: 100px;
+  position: relative;
+  border: 1px solid green; 
+}
+
+.container-inner { 
+  height: 120px;
+  position: relative;
+  border: 1px solid green; 
+}
+
+.vertical-center {
+  margin: 0;
+  position: relative;
+  top: 50%;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+.btn-class{
+  padding-left: 24%;
+}
+
+.btn-upload{
+  padding-left: 24%
+}
+
+</style>
+
+
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 </head>
 
+
 <body>
- <div class="login">
-  <h1>Travel Insurance Claim Prediction</h1>
+  <div class="container">
+  <h2 class='display'>Classify Which Bear?</h2>
+<p>
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <ul class=flashes>
+    {% for message in messages %}
+      <li class='display'>{{ message }}</li>
+    {% endfor %}
+    </ul>
+    {% endif %}
+  {% endwith %}
+</p>
+{% if filename %}
+<br>
+  <div class='img-display' id='over'>
+    <img src="{{ url_for('display_image', filename=filename) }}" width="512" height="256">
+  </div>
+{% endif %}
 
-     <!-- Main Input For Receiving Query to our ML -->
-    <form action="{{ url_for('predict')}}"method="post">
-      <input type="text" name="Net Sales" placeholder="Net Sales" required="required" />
-        <input type="text" name="Duration" placeholder="Duration" required="required" />
-        <input type="text" name="Age" placeholder="Age" required="required" />
-        <input type="text" name="Commision (in value)" placeholder="Commision (in value)" required="required" />
+<br>
+<br>
 
-        <input type="text" name="Agency Type_Travel Agency" placeholder="Agency Type_Travel Agency" required="required" />
-
-        <input type="text" name="Distribution Channel_Online" placeholder="Distribution Channel_Online" required="required" />
-
-        <input type="text" name="Agency_C2B" placeholder="Agency_C2B" required="required" />
-        <input type="text" name="Agency_EPX" placeholder="Agency_EPX" required="required" />
-        <input type="text" name="Agency_JZI" placeholder="Agency_JZI" required="required" />
-        <input type="text" name="Agency_LWC" placeholder="Agency_LWC" required="required" />
-        <input type="text" name="Agency_CWT" placeholder="Agency_CWT" required="required" />
-
-
-
-        <input type="text" name="Destination_SINGAPORE" placeholder="Destination_SINGAPORE" required="required" />
-        <input type="text" name="Destination_CHINA" placeholder="Destination_CHINA" required="required" />
-        <input type="text" name="Destination_UNITED STATES" placeholder="Destination_UNITED STATES" required="required" />
-        <input type="text" name="Destination_THAILAND" placeholder="Destination_THAILAND" required="required" />
-        <input type="text" name="Destination_TAIWAN, PROVINCE OF CHINA" placeholder="Destination_TAIWAN, PROVINCE OF CHINA" required="required" />
-        <input type="text" name="Destination_JAPAN" placeholder="Destination_JAPAN" required="required" />
-        <input type="text" name="Destination_MALAYSIA" placeholder="Destination_MALAYSIA" required="required" />
-        <input type="text" name="Destination_UNITED KINGDOM" placeholder="Destination_UNITED KINGDOM" required="required" />
-        <input type="text" name="Destination_KOREA, REPUBLIC OF" placeholder="Destination_KOREA, REPUBLIC OF" required="required" />
-        <input type="text" name="Destination_NETHERLANDS" placeholder="Destination_NETHERLANDS" required="required" />
-        <input type="text" name="Destination_ITALY" placeholder="Destination_ITALY" required="required" />
-        <input type="text" name="Destination_SPAIN" placeholder="Destination_SPAIN" required="required" />
-        <input type="text" name="Destination_PHILIPPINES" placeholder="Destination_PHILIPPINES" required="required" />
-        <input type="text" name="Destination_HONG KONG" placeholder="Destination_HONG KONG" required="required"/>
-        <input type="text" name="Destination_INDONESIA" placeholder="Destination_INDONESIA" required="required" />
-        <input type="text" name="Destination_SOUTH AFRICA" placeholder="Destination_SOUTH AFRICA" required="required" />
-        <input type="text" name="Destination_NEPAL" placeholder="Destination_NEPAL" required="required" />
-        <input type="text" name="Destination_VIET NAM" placeholder="Destination_VIET NAM" required="required" />
-        <input type="text" name="Destination_INDIA" placeholder="Destination_INDIA" required="required" />
+<div class="result" align="center">
+  {% if result %}
+    <br> Predicted class of the bear :
+        <p><b>{{ result }}</b></p> 
+  {% endif%}
+</div>
 
 
+<form method="post" action="/" enctype="multipart/form-data">
+    
+    <p>
+   
 
+<div class='container-inner'>
+  <div class = 'vertical-center'>
+    <input type="file" name="file" autocomplete="off" class='btn-class' required>
+    </p>
 
-        
-        <input type="text" name="Product Name_Bronze Plan" placeholder="Product Name_Bronze Plan" required="required" />
-        <input type="text" name="Product Name_Cancellation Plan" placeholder="Product Name_Cancellation Plan" required="required" />
-        <input type="text" name="Product Name_Silver Plan" placeholder="Product Name_Silver Plan" required="required" />        
-        <input type="text" name="Product Name_2 way Comprehensive Plan" placeholder="Product Name_2 way Comprehensive Plan" required="required"/>
-        <input type="text" name="Product Name_Annual Silver Plan" placeholder="Product Name_Annual Silver Plan" required="required" />
-        <input type="text" name="Product Name_Single Trip Travel Protect Gold" placeholder="Product Name_Single Trip Travel Protect Gold" required="required" />
-        <input type="text" name="Product Name_Value Plan" placeholder="Product Name_Value Plan" required="required" />
-        <input type="text" name="Product Name_Basic Plan" placeholder="Product Name_Basic Plan" required="required" />
-        
-        <input type="text" name="Product Name_Annual Travel Protect Gold" placeholder="Product Name_Annual Travel Protect Gold" required="required" />
-        <input type="text" name="Product Name_Rental Vehicle Excess Insurance" placeholder="Product Name_Rental Vehicle Excess Insurance" required="required" />       
-        
-        <input type="text" name="Product Name_Gold Plan" placeholder="Product Name_Gold Plan" required="required" />
+    <p class='btn-class'>
+    <input type="submit" value="Classify" class="btn btn-warning">
+  </p>
+</div>
+</div>
+  
+</form>
+<br>
 
-
-        <button type="submit" class="btn btn-primary btn-block btn-large">Predict</button>
-    </form>
-
-   <br>
-   <br>
-   {{ prediction_text }}
-
- </div>
-
-
+</div>
 </body>
 </html>
